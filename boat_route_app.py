@@ -1,5 +1,4 @@
 # sample program that can move points (already draws 10 different lines (with user interface)), also has some additonal menu options
-# draws and edits curves, saves them to json as 2 points and heading to 3rd
 
 import cv2 as cv
 import numpy as np
@@ -353,7 +352,7 @@ class MyApp(QMainWindow):
                         b_0 = self.routes[0][i]
                     b_1 = self.routes[0][i+1][0]
                     b_2 = self.routes[0][i+1][1]
-                    array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2, 10)
+                    array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2)
                     time = 0
                     for j in range(len(array_of_curve_coords) - 1):
                         time += self.define_distance(array_of_curve_coords[j], array_of_curve_coords[j+1]) / (self.velocity_array[0][i] / 1.9438444924406)
@@ -396,7 +395,7 @@ class MyApp(QMainWindow):
                             b_0 = self.routes[i][j]
                         b_1 = self.routes[i][j+1][0]
                         b_2 = self.routes[i][j+1][1]
-                        array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2, 10)
+                        array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2)
                         time = 0
                         for k in range(len(array_of_curve_coords) - 1):
                             time += self.define_distance(array_of_curve_coords[k], array_of_curve_coords[k+1]) / (self.velocity_array[i][j] / 1.9438444924406)
@@ -516,10 +515,10 @@ class MyApp(QMainWindow):
 
 ################################################## BOARD ITSELF ##################################################
 
-    def bezier_curve(self, b_0, b_1, b_2, n):
+    def bezier_curve(self, b_0, b_1, b_2):
         res = [b_0]
-        for i in range(n):
-            t = n * i / 100
+        for i in range(100):
+            t = i / 100
             x = (b_0[0]-2*b_1[0]+b_2[0])*t*t+(-2*b_0[0]+2*b_1[0])*t+b_0[0]
             y = (b_0[1]-2*b_1[1]+b_2[1])*t*t+(-2*b_0[1]+2*b_1[1])*t+b_0[1]
             res.append((round(x), round(y)))
@@ -540,7 +539,7 @@ class MyApp(QMainWindow):
                     b_1 = x
                     b_2 = y
                     print('b_0', b_0, 'b_1', b_1, 'b_2', b_2)
-                    array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2, 100)
+                    array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2)
                     cv.rectangle(self.myboard, pt1=(b_1[0]-3,b_1[1]-3), pt2=(b_1[0]+3,b_1[1]+3), color=self.colors_array[color_cnt], thickness=1)
                     curve_flag = True
                     for i in range(len(array_of_curve_coords) - 1):
@@ -653,7 +652,7 @@ class MyApp(QMainWindow):
                     b_2 = self.routes[self.cur_boat_index][-1][0]
                     b_1 = (x, y)
                     b_0 = (prevX, prevY)
-                    array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2, 100)
+                    array_of_curve_coords = self.bezier_curve(b_0, b_1, b_2)
                     curve_flag = True
                     cv.rectangle(self.myboard, pt1=(b_1[0]-3,b_1[1]-3), pt2=(b_1[0]+3,b_1[1]+3), color=self.colors_array[self.cur_boat_index], thickness=1)
                     for i in range(len(array_of_curve_coords) - 1):
